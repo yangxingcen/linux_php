@@ -1,0 +1,44 @@
+yum install -y zlib-devel  gcc gcc-c++
+
+
+checking for libzip... configure: error: system libzip must be upgraded to version >= 0.11
+
+https://www.php.cn/php-weizijiaocheng-414091.html
+#先删除旧版本
+
+yum remove -y libzip
+#下载编译安装
+wget https://nih.at/libzip/libzip-1.2.0.tar.gz
+tar -zxvf libzip-1.2.0.tar.gz
+cd libzip-1.2.0
+./configure
+make && make install
+
+
+报错
+usr/local/include/zip.h:59:21: fatal error: zipconf.h: No such file or directory
+
+cp /usr/local/lib/libzip/include/zipconf.h /usr/local/include/zipconf.h
+
+
+
+启动fpm出现的错误-相关连接
+
+
+https://www.emam.cn/index/details/id/129/cid/11.html
+
+
+nginx如何调用php
+https://www.cnblogs.com/donghui521/p/10334776.html
+
+server {
+    listen       8011;
+    server_name  test.cn;
+    location ~ \.php?.*$ {
+        root           /share/test;
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+}
+
