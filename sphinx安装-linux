@@ -4,4 +4,4 @@ yum install make gcc g++ gcc-c++ libtool autoconf automake imake mysql-devel lib
 视频教程链接
 https://www.php.cn/code/24991.html
 安装
-./configure --prefix=/usr/local/sphinx  --with -mysql=/usr/local/mysql
+./configure --prefix=/usr/local/sphinx  --with-mysql=/usr/local/mysql
