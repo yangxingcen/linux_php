@@ -5,3 +5,71 @@ yum install make gcc g++ gcc-c++ libtool autoconf automake imake mysql-devel lib
 https://www.php.cn/code/24991.html
 安装
 ./configure --prefix=/usr/local/sphinx  --with -mysql=/usr/local/mysql
+
+
+
+
+
+
+
+
+
+mmseg
+./bootstrap
+./configure --prefix=/usr/local/mmseg
+automake
+
+
+
+corese
+
+
+
+
+./configure --prefix=/usr/local/coreseek --with-mysql=/usr/local/mysql --with-mmseg=/usr/local/mmseg  --with-mmseg-includes=/usr/local/mmseg/include/mmseg/ --with-mmseg-libs=/usr/local/mmseg/lib/
+./configure --prefix=/usr/local/coreseek4 --with-mysql=/usr/local/mysql --with-mmseg=/usr/  --with-mmseg-includes=/usr/local/mmseg/include/mmseg/ --with-mmseg-libs=/usr/local/mmseg/lib/
+安装错误看
+https://blog.csdn.net/houbin99999/article/details/73558090
+
+
+
+
+
+csft.conf
+
+修改 添加：
+charset_type    =zh_cn.utf-8
+charset_dictpath   =/usr/local/mmseg/etc/
+
+
+取消注释
+#sql_sock				= /tmp/mysql.sock
+
+
+添加注释
+#sql_attr_uint			= group_id
+#sql_attr_timestamp		= date_added
+#stopwords			= G:\data\stopwords.txt
+	#wordforms			= G:\data\wordforms.txt
+		#exceptions		= /data/exceptions.txt
+
+
+
+./configure --with-php-config=/usr/local/php/bin/php-config		  --with-sphinx
+
+
+
+create table apollo_facebook_spcounter(
+    counter_id int unsigned auto_increment primary key,
+    max_doc_id int
+    );
+
+主数据源
+./indexer main  --rotate
+增量数据源
+./indexer delta  --rotate
+
+567,569,572,573,574,576,578,582,584,585,
+588,590,591,593,598,600,603,604,605,608,
+610,612,613,615,625,626,627,1967,1971,1975,
+1976,1978,1982,1984,1989,1995,1997,2002,2007,2009,2012,2016,2020,9384,9422,304134,436953,876888,876891,876897,876898,876902,876903,876906,876907,876913,876917,876922,876928,876937,876941,876942,876943,
