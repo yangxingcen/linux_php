@@ -1,5 +1,15 @@
 yum install make gcc g++ gcc-c++ libtool autoconf automake imake mysql-devel libxml2-devel expat-devel
 
+启动facebook
+./indexer --config /usr/local/coreseek4/etc/csft.conf --all
+./searchd --config /usr/local/coreseek4/etc/csft.conf
+启动
+
+启动linkedin
+./indexer --config /usr/local/coreseek4/etc/linkedin.conf --all
+./searchd --config /usr/local/coreseek4/etc/linkedin.conf
+
+
 
 视频教程链接
 https://www.php.cn/code/24991.html
@@ -27,7 +37,7 @@ corese
 
 
 ./configure --prefix=/usr/local/coreseek --with-mysql=/usr/local/mysql --with-mmseg=/usr/local/mmseg  --with-mmseg-includes=/usr/local/mmseg/include/mmseg/ --with-mmseg-libs=/usr/local/mmseg/lib/
-./configure --prefix=/usr/local/coreseek4 --with-mysql=/usr/local/mysql --with-mmseg=/usr/  --with-mmseg-includes=/usr/local/mmseg/include/mmseg/ --with-mmseg-libs=/usr/local/mmseg/lib/
+./configure --prefix=/usr/local/coreseek4 --with-mysql=/usr --with-mmseg=/usr/local/mmseg/  --with-mmseg-includes=/usr/local/mmseg/include/mmseg/ --with-mmseg-libs=/usr/local/mmseg/lib/
 安装错误看
 https://blog.csdn.net/houbin99999/article/details/73558090
 
