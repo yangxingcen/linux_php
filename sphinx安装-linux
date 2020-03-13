@@ -2,7 +2,10 @@ yum install make gcc g++ gcc-c++ libtool autoconf automake imake mysql-devel lib
 
 启动facebook
 ./indexer --config /usr/local/coreseek4/etc/csft.conf --all
+./indexer --config /usr/local/coreseek4/etc/csft.conf --all  --rotate   #运行时用的
 ./searchd --config /usr/local/coreseek4/etc/csft.conf
+
+./searchd --config /usr/local/coreseek4/etc/csft.conf  --stop   #停止服务器
 启动
 
 启动linkedin
