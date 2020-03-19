@@ -1,0 +1,13 @@
+---为该数据库创建用户:
+CREATE USER IF NOT EXISTS '{$user}'@'{$domain}' IDENTIFIED BY '{$password}'
+CREATE USER IF NOT EXISTS yangxingcen@127.0.0.1 IDENTIFIED BY 'yangxingcen1113'
+
+----创建数据库：
+CREATE DATABASE IF NOT EXISTS `{$dbname}` DEFAULT CHARACTER SET {$charset}
+CREATE DATABASE IF NOT EXISTS yangxingcendb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci
+
+----授权用户：
+GRANT ALL PRIVILEGES ON `{$dbname}`.* TO '{$user}'@'{$domain}'
+GRANT ALL PRIVILEGES ON yangxingcendb.* TO yangxingcen@127.0.0.1
+
+FLUSH PRIVILEGES
