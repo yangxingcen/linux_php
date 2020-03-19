@@ -10,4 +10,5 @@ CREATE DATABASE IF NOT EXISTS yangxingcendb DEFAULT CHARACTER SET utf8 COLLATE u
 GRANT ALL PRIVILEGES ON `{$dbname}`.* TO '{$user}'@'{$domain}'
 GRANT ALL PRIVILEGES ON yangxingcendb.* TO yangxingcen@127.0.0.1
 
+---刷新：
 FLUSH PRIVILEGES
