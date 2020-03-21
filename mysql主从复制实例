@@ -1,0 +1,90 @@
+
+一、
+创建mysql
+
+create database ddm;
+
+
+=============================================================================二、配置主从服务器
+注：
+1.一定要从主服务器
+2.一定要有日志文件
+
+
+--vim /etc/my.conf
+#日志系统的名称（这个名称是可以随便修改的）
+log_bin=master-a-bin
+#设置日期文件的格式
+binlog-format=ROW
+#当前服务器的主机号（id必须是唯一的们也是不能重复的）
+server-id=1
+#将要实现主从复制的数据库
+binlog_do_db=ddm
+
+3.配置从服务器登陆主服务器的账号授权
+
+进入mysql数据库
+
+创建从数据库的masterbackup用户权限
+
+grant replication slave on *.* to 'root'@'192.168.88.130' identified by 'root';
+#备注
+192.168.17.%通配符，表示0-255的ip都可以访问主服务器，正式环境请配置执行的从服务器
+#若将192.168.17.%改为%，则任何ip均可作为其从服务器访问主服务器
+#'root'@'192.168.17.%’
+
+刷新权限
+flush PRIVILEGES;
+
+
+
+========================================================================================三、配置主从服务器
+
+#日志系统的名称（这个名称是可以随便修改的）
+log_bin=master-a-bin
+#设置日期文件的格式,跟主服务器一样
+binlog-format=ROW
+#各个服务器的id，这个必须是唯一的，和主服务器不一样
+server-id=2
+#双主互相备份(129作为一台从服务器存在的)
+#log-slave-updates=true
+
+
+#设置主从复制的日志和偏移量
+
+#告诉从服务器我应该从什么地方获取刚刚主服务器生成的日志系统文件
+change  master to master_host='192.168.88.130',master_port=3306,master_user='root',master_password='root',master_log_file='master-a-bin.000001',master_log_pos=154;
+
+#启动slave数据同步
+start slave;
+
+stop slave;
+
+#查看主从状态
+
+show slave status\G;
+
+Connecting  正在进行时 Connected 说明已经完成
+出现正在连接而且客户端没法连接的情况1.防火墙的原因
+1.防火墙的原因
+2.服务器中并没有给外界提供3306的开放端口
+
+开启防火墙
+systemctl start firewalld
+设置3306为开放端口
+firewall-cmd --zone=public --add-port=3306/tcp--permanent
+
+重新加载防火墙
+firewall-cmd --reload
+
+
+3.外部不能登录-修改授权登陆
+
+grant all privileges on *.* to root@'%' identified by 'root' with grant option;
+运行结果错误：ERROR 1819 ( HY000 ) : Unknown error 1819
+
+设置执行查看
+select @@validate_password_policy
+
+
+SHOW VARIABLES LIKE 'validate_password%';

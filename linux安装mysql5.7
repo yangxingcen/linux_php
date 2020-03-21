@@ -1,0 +1,116 @@
+
+yum install lrzsz -y  rz
+
+yum install net-tools   netstat
+
+
+================================================================修改root密码==========================
+忘记密码 修改密码
+
+vim /etc/my.cnf
+1.在[mysqld]后面任意一行添加“skip-grant-tables”用来跳过密码验证的过程，
+2.重启mysql
+
+
+
+
+
+
+update mysql.user set authentication_string=PASSWORD('root') where user='root';
+
+
+flush privileges;
+
+
+quit
+
+
+修改密码后重新登录mysql报错
+
+错误： ERROR 1820 (HY000): You must reset your password using ALTER USER statement before executing this statement.
+
+解决--重新修改密码
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'root' PASSWORD EXPIRE NEVER;
+
+flush privileges;
+
+
+
+============================================安装步骤
+----解压
+tar -xvf mysql-5.7.26-linux-glibc2.12-x86_64.tar
+
+----再移动并重命名一下
+mv mysql-5.7.26-linux-glibc2.12-x86_64 /usr/local/mysql
+
+----创建mysql用户组和用户并修改权限
+groupadd mysql
+useradd -r -g mysql mysql
+
+----创建数据目录并赋予权限
+mkdir -p  /data/mysql              #创建目录
+chown mysql:mysql -R /data/mysql   #赋予权限
+
+----配置my.cnf
+vim /etc/my.cnf
+
+----内容如下
+[mysqld]
+bind-address=0.0.0.0
+port=3306
+user=mysql
+basedir=/usr/local/mysql   //mysql安装目录
+datadir=/data/mysql         //mysql存储目录
+socket=/tmp/mysql.sock
+log-error=/data/mysql/mysql.err
+pid-file=/data/mysql/mysql.pid
+#character config
+character_set_server=utf8mb4
+symbolic-links=0
+explicit_defaults_for_timestamp=true
+
+
+
+----初始化数据库
+--进入mysql的bin目录
+
+cd /usr/local/mysql/bin/
+
+--初始化
+./mysqld --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql/ --datadir=/data/mysql/ --user=mysql --initialize
+
+
+--查看密码
+cat /data/mysql/mysql.err
+
+
+----启动mysql，并更改root 密码
+--先将mysql.server放置到/etc/init.d/mysql中
+cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
+
+--启动！！！
+service mysql start
+
+ps -ef|grep mysql
+
+
+
+
+
+
+===========================================================================设置快捷启动mysql
+
+创建并打开文件mysql.sh
+vim /etc/profile.d/mysql.sh
+
+添加内容如下:
+export PATH=$PATH:/usr/local/mysql/bin
+
+保存并退出
+
+:wq!
+
+使用source立即生效刚刚添加的mysql环境变量
+source /etc/profile.d/mysql.sh
+
+
