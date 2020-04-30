@@ -1,0 +1,6 @@
+
+查看版本信息
+php --ri swoole
+
+查看列表目录
+tree -L 1

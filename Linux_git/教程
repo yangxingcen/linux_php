@@ -1,0 +1,49 @@
+-----------下载教程
+https://www.cnblogs.com/youqc/p/10488181.html
+
+账号：git
+密码：gitpwd1113
+
+第一步
+
+创建一个目录
+
+mkdir git_demo
+
+初始化git_demo空的仓库cd git_demo
+git init
+
+复制文件到 git_demo下面
+
+查看状态
+git status
+
+--添加占成区
+
+单个
+git add 404.html
+#所有文件
+git add .
+
+删除
+
+gir rm --cached 404.html
+
+
+提交代码
+指定文件
+git commit  404.html   -m"备注信息"
+提交占成区所有的改动文件
+git commit -a -m"提示"
+
+
+#添加远程git仓库
+git remote add origin git@210.168.188.110:/path_git/demo4/.git
+git push origin master #这样就同步到服务器了
+
+查看提交日志
+
+git log --stat
+
+
+git log -p

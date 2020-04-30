@@ -1,0 +1,60 @@
+
+yum install lrzsz
+
+
+
+步骤 2：在 root 帐户下执行以下命令：
+tar xzvf 压缩包名 （如：tar xzvf safedog_linux32.tar.gz）
+ls （备注：ls 主要用来获取压缩包解压出来的文件名 如输出结果
+safedog_linux32.123234 safedog_linux32.tar.gz）
+cd 文件夹名（如：cd safedog_linux32.123234）
+chmod +x *.py
+./install.py
+
+步骤 3：客户端加入服云后，可进行命令行功能操作（详细见第 6 章节）；
+使用：
+service safedog status 查看安全狗服务；
+service safedog start 启动安全狗服务；
+service safedog stop 停止安全狗服务；
+sdstart 重启安全狗服务。
+
+步骤 2 ：在客户端进行命令行方式：输入命令 sdcloud –u 用户名；
+步骤 3 ：客户端加入服云后，可进行命令行功能操作（详细见第 6 章节）；
+使用：
+service safedog status 查看安全狗服务；
+service safedog start 启动安全狗服务；
+service safedog stop 停止安全狗服务；
+sdstart 重启安全狗服务。
+
+
+安全狗切换账号方法，安全狗本身登陆用户后就没有注销功能。所以这里教大家如何切换
+安全狗安装路径的同级目录：SafeDogUpdateCenter文件夹里有个文件名叫safedog_user.psf的文件。这个是安全用户证书。删了就可以重新登录新的用户
+
+
+报错信息
+Need system command 'lsof' to install safedog for linux.
+
+Installation aborted!
+
+原因：缺少“lsof“命令，安装安全狗的时候需要用上"lsof"，而恰好我们的Linux服务器又没有装这个命令。
+
+
+
+解决方法
+知道了原因，解决起来就容易多了，既然少了"lsof"这个命令，我们直接用yum安装不就可以了吗？命令如下：
+
+yum install lsof
+这样就成功解决此报错问题了。
+
+
+
+注意：
+
+1、如果你还有提示“need system command 'locate' to install safedog for linux”，只需要按照以上原理执行如下命令：
+
+ yum install mlocate
+
+
+2、如果你还有提示“need system command 'lspci' to install safedog for linux”，只需要按照以上原理执行如下命令：
+
+yum -y install pciutils

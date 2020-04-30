@@ -1,0 +1,15 @@
+$ cd /usr/local/
+$ sudo wget http://nginx.org/download/nginx-1.8.0.tar.gz
+$ sudo tar -zxvf nginx-1.8.0.tar.gz
+$ cd nginx-1.8.0
+--with-http_ssl_module --with-pcre    ssl模块
+$ sudo ./configure --prefix=/usr/local/nginx --with-http_ssl_module --with-pcre  #这一步需要按需要添加编译参数，如下
+$ sudo make
+$ sudo make install
+
+
+
+
+重新编译nginx添加 ssl模块
+
+https://blog.csdn.net/u012946310/article/details/85106653

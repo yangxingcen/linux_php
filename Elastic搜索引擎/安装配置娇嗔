@@ -1,0 +1,130 @@
+进入目录
+
+#不要用root运行
+./bin/elasticsearch
+
+
+
+
+启动错误
+
+    问题一（没权限）
+        Exception in thread "main" java.nio.file.AccessDeniedException:
+        sudo chmod -R 777
+    问题二（sudoers不存在，在root环境下操作）
+
+        vim /etc/sudoers
+
+        root ALL=(ALL:ALL) ALL
+        yxconline ALL=(ALL:ALL) ALL
+
+
+
+
+    问题三（再启动错误配置信息，config目录  vim elasticsearch.yml）
+
+
+        xpack.ml.enabled: false
+        network.host:0.0.0.0
+        http.port:8301
+
+        bootstrap.memory_lock: false
+        bootstrap.system_call_filter: false
+        #跨域
+        http.cors.enabled: true
+        http:cors.allow-origin: "*"
+        #分布式
+        cluster.name: singwa_imooc   #集名字
+        node.name: singwa_imooc_1       #节点名字  名字不要重复
+        node.master: true               #主服务 主节点  主节点用true   不然用false
+
+        #分布式主机2
+        discovery.zen.ping.unicast.hosts: ["127.0.0.1"]
+
+
+
+    问题四（只能用127.0.0.1访问不能用ip访问）
+        https://blog.csdn.net/happyzxs/article/details/89156068
+        
+    1、max file descriptors [4096] for elasticsearch process is too low, increase to at least [65536]
+
+    　　每个进程最大同时打开文件数太小，可通过下面2个命令查看当前数量
+
+    ulimit -Hn
+    ulimit -Sn
+
+
+    #分布式错误
+    Caused by: org.elasticsearch.cluster.coordination.CoordinationStateRejectedE
+
+    删除安装目录下面的data
+
+head插件安装
+
+    https://github.com/mobz/elasticsearch-head
+    git clone git://github.com/mobz/elasticsearch-head.git
+    cd elasticsearch-head
+    npm install
+    npm run start
+    配置文件
+
+   Gruntfile.js 修改启动端口  port：9100   端口默认9100
+
+    _site/app.js  修改 elastic端口 post  默认 9200
+
+
+
+
+
+
+添加信息
+    自定义id
+    （my-index：索引；_doc：类型；3：id）
+    url：http://192.168.88.151:9200/my-index/_doc/3/
+    类型：put
+
+    自增id
+     url：http://192.168.88.151:9200/my-index/_doc
+     类型：post
+    {
+      "age": "18",
+      "email": "1336605396@qq.com",
+      "name": "yxconline"
+    }
+
+
+信息查询
+  url：http://192.168.88.151:9200/my-index/_doc/
+  _search
+  请求类型 post
+  查询name值
+    普通查询模式
+      {
+        "query": {
+          "match_phrase": {
+            "name": "yxconline"
+          }
+        }
+      }
+    分词查询模式
+    {
+      "query": {
+        "match": {
+          "name": "杨星岑"
+        }
+      }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

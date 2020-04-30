@@ -1,0 +1,26 @@
+
+关闭防火墙命令：systemctl stop firewalld.service
+
+开启防火墙：systemctl start firewalld.service
+
+关闭开机自启动：systemctl disable firewalld.service
+
+开启开机启动：systemctl enable firewalld.service
+
+cd /etc/sysconfig/network-scripts/
+
+vim /etc/sysconfig/network-scripts/ifcfg-ens33
+
+修改
+BOOTPROTO="static"
+
+新增
+DNS1=114.114.114.114
+IPADDR=192.168.88.151
+NETMASK=255.255.255.0
+GATEWAY=192.168.88.2        #需要和第二步中虚拟网卡设置的网关一致
+
+
+
+#重启网络
+service network restart

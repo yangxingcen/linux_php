@@ -1,0 +1,36 @@
+
+教程链接
+https://blog.csdn.net/z13615480737/article/details/83857055
+
+
+
+
+直接下载就行
+
+1.下载   cd /usr/local/src/ 
+
+ wget http://pecl.php.net/get/swoole-4.2.6.tgz
+
+2.解压 tar xvf swoole-4.2.6.tgz
+
+             cd swoole-4.2.6
+
+3.编译  /usr/local/php7/bin/phpize  这是我的php的phpize位置
+
+
+
+./configure --with-php-config=/usr/local/php7/bin/php-config   （这是我的配置 ）
+
+
+
+echo $? 看上一步执行成功没
+
+然后 make && make install
+
+
+
+添加扩展  
+
+vim /usr/local/php7/etc/php.ini
+
+extension =/usr/local/php7/lib/php/extensions/no-debug-non-zts-20170718/swoole.so

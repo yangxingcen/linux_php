@@ -1,0 +1,17 @@
+
+查看用户名
+cat /etc/passwd
+
+1.锁定用户登录
+passwd -l 用户名(例如:root)
+解锁用户登录
+
+passwd -u 用户名(例如:root)
+
+
+
+2.禁用root用户远程登录
+ vim /etc/ssh/sshd_config 打开文件找到一条 PermitRootLogin yes 改为 PermitRootLogin no
+
+重启服务
+systemctl restart sshd

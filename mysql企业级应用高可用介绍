@@ -1,0 +1,163 @@
+企业级应用如何实现高可用
+
+MySQL的主从复制
+
+
+mycat：作为一个数据库中间件存在，独立于应用程序之外
+1.读写分离
+2.数据切片
+3.分库分表
+
+安装mycat
+wget http://dl.mycat.io/1.6-RELEASE/Mycat-server-1.6-RELEASE-20161028204710-linux.tar.gz
+
+
+注意--
+因为Mycat是java语言编写的，所以一定要配置jdk
+
+===================================================================================jdk配置
+
+1.tar -zxvf 解压jdk包
+
+将文件解压到usr目录下面
+2.mv jdk8 /usr/
+
+3.创建并打开文件java.sh
+  vim /etc/profile.d/java.sh
+
+JAVA_HOME=/usr/jdk8
+CLASSPATH=%JAVA_HOME%/bin:%JAVA_HOME%/jre/lib
+PATH=$PATH:$JAVA_HOME/bin:$JAVA_HOME/jre/bin
+export PATH CLASSPATH JAVA_HOME
+
+保存并退出
+
+:wq!
+
+使用source立即生效刚刚添加的mysql环境变量
+source /etc/profile.d/java.sh
+
+==========================================================================安装mycat
+
+1.解压文件
+tar -zxvf 文件
+
+2.复制文件
+mv mycat文件   /usr/
+
+
+3.配置文件 -conf
+------------------------------------------------------------server.xml
+
+<!--有读写权限的用户（最高权限用户）-->
+<user name="root">
+    <property name="password">root</property>
+    <!--对应schema.xml的逻辑数据库名称-->
+    <property name="schemas">TESTDB</property>
+</user>
+<!--只有读的权限-->
+<user name="user">
+    <property name="password">root</property>
+    <property name="schemas">TESTDB</property>
+    <property name="readOnly">true</property>
+</user>
+
+---------------------------------------------------------schema.xml
+
+<?xml version="1.0"?>
+<!DOCTYPE mycat:schema SYSTEM "schema.dtd">
+<mycat:schema xmlns:mycat="http://io.mycat/">
+
+	<schema name="TESTDB" checkSQLschema="false" sqlMaxLimit="100">
+		<!--里面的tables是实现分库分表-->
+	</schema>
+
+	<dataNode name="dn1" dataHost="localhost1" database="ddm" />
+
+	<!--
+	1, balance="0”,所有读操作都发送到当前可用的 writeHost上
+	2, balance="1”,所有读操作都随机的发送到 readHost
+	3, balance="2”,所有读操作都随机的在 writeHost readHost上分发
+	4, balance"3”,所有读请求随机的分发到 writeHost对应的 readhost执行, writeHost不负担读压力,注意 balance=3只在1.4及其以后版本有
+	balance 一般配置 3和4
+	1, wrltetype="0”,所有写操作都发送到可用的 writeHost上
+	2, writetype="1”,所有写操作都随机的发送到 readHost
+	3, writetype="2”,所有写操作都随机的在 writeHost、 readHost分上发
+	-->
+	<dataHost name="localhost1" maxCon="1000" minCon="10" balance="0"
+			writeType="0" dbType="mysql" dbDriver="native" switchType="1"  slaveThreshold="100">
+		<!--心跳监测，监测主机和从机是否正常-->
+		<heartbeat>select user()</heartbeat>
+		<writeHost host="hostM1" url="localhost:3306" user="root"
+				password="123456">
+			<!-- 从机 -->
+			<readHost host="hostS2" url="192.168.88.129:3306" user="root" password="123456" />
+		</writeHost>
+	</dataHost>
+
+</mycat:schema>
+
+--------------------------------------------------------------------启动mycat
+
+在mycat bin目录下面启动
+--启动
+./mycat  start  console
+
+--查看状态
+./mycat status console
+
+ps -ef  |grep  mycat
+
+--登陆mycat
+
+登陆mycat的管理端口
+mysql -uroot  -proot -h127.0.0.1 -P9066
+
+连接数据端口
+mysql -uroot  -proot -h127.0.0.1 -P8066
+
+查看帮助文档
+
+show @@help;
+
+查看读写分离情况
+show @@datasource;
+
+检查心跳情况
+show @@heartbeat;
+
+
+systemctl stop firewalld;
+
+
+
+--------测试读写分离情况
+
+修改日志情况
+
+<asyncRoot level="info" includeLocation="true">
+修改为
+<asyncRoot level="debug" includeLocation="true">
+
+查看日志情况
+
+tail -f  wrapper.log
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
