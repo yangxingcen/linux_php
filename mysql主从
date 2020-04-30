@@ -1,7 +1,19 @@
+-------------------------------------快捷登陆在root~创建  .my.conf
+
+[mysql]
+user=root
+password=yangxingcen1113
+[mysqldump]
+user=root
+password=yangxingcen1113
+
+
+
 
 //开启mysql binlog日子
 
 log_bin=mysql_bin    //也可以写路径 /data/binlog/mysql_bin
+
 
 ############################################在mysql里面操作
 //查看日志个数
@@ -82,7 +94,81 @@ mysqlbinlog --start-position=2218  --stop-position=3333   文件名 >/tmp/bin.sq
 -
 去mysql里面执行
 --临时关闭二进制日志
-set sql_Log_bin-0;
+set sql_Log_bin=0;
+开启
+set sql_Log_bin=1;
 --恢复文件
-soure /tmp/bin.sql
+source /tmp/bin.sql
+
+
+
+
+
+--------------------------第二版本-------------------------------------日志截取恢复
+
+---gtid恢复数据比较方便
+flush logs;   更新日志
+
+//截取某个库的日期(-d  bindb是表的意思)
+mysqlbinlog -d  bindb  --start-position=2218  --stop-position=3333   文件名 >/tmp/bin.sql
+
+----------------------vim /etc/my.cnf-----------------------------------gitd截取
+gtid-mode=on
+enforce-gtid-consistency=true
+
+
+-----------------------------------------------------------慢查询日志
+
+--查询日志
+select  @@slow_query_log   #0关闭   1-开启
+
+--文件存放日志
+select @@slow_query_file
+
+
+--慢语句评估时间
+select @@slow_query_time
+
+--不走索引的语句记录
+select @@log_queries_not_using_indexes
+
+
+--------------------------------------------vim /etc/my.cnf
+
+slow_query_log=1
+slow_query_log_file=/data/3306/db010slow.log
+long_query_time=0.1
+log_queries_not_using_indexes=1
+
+
+
+
+
+===============================================================数据恢复============================
+
+--------------备份数据---导出数据带-B和不带的区别
+
+
+mysqldump -uroot -pyangxingcen1113 -B 库名>xxxx/db.sql
+
+create database world;
+use world
+
+
+mysqldump -uroot -pyangxingcen1113  库名>xxxx/db.sql
+
+
+
+
+
+使用场景:
+1. --set-gtid-purged=OFF,可以使用在日常备份参数中.
+mysqldump -uroot -pyangxingcen1113 -A -R -E --triggers --master-data=2  --single-transaction --set-gtid-purged=OFF >/data/backup/full.sql
+--某个表
+mysqldump -uroot -pyangxingcen1113 -A -B binlog -R -E --triggers --master-data=2  --single-transaction --set-gtid-purged=OFF >/data/backup/full.sql
+2. auto , on:在构建主从复制环境时需要的参数配置
+mysqldump -uroot -p -A -R -E --triggers --master-data=2  --single-transaction --set-gtid-purged=ON >/data/backup/full.sql
+
+
+
 

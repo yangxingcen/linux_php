@@ -1,2 +1,3 @@
 查看一个文件开启几个进程
 ps  aft |grep  tcp.php
+

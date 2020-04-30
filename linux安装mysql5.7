@@ -29,7 +29,7 @@ quit
 
 错误： ERROR 1820 (HY000): You must reset your password using ALTER USER statement before executing this statement.
 
-解决--重新修改密码
+解决--重新修改密码(IDENTIFIED BY(密码))
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'root' PASSWORD EXPIRE NEVER;
 
 flush privileges;
@@ -64,7 +64,6 @@ datadir=/data/mysql         //mysql存储目录
 socket=/tmp/mysql.sock
 log-error=/data/mysql/mysql.err
 pid-file=/data/mysql/mysql.pid
-#character config
 character_set_server=utf8mb4
 symbolic-links=0
 explicit_defaults_for_timestamp=true
@@ -84,8 +83,18 @@ cd /usr/local/mysql/bin/
 cat /data/mysql/mysql.err
 
 
+
 ----启动mysql，并更改root 密码
+my.cnf设置不需要密码登陆
+skip-grant-tables
+
+登陆mysql修改密码
+flush PRIVILEGES;
+alter user 'root'@'localhost' identified by 'root';
+
+
 --先将mysql.server放置到/etc/init.d/mysql中
+
 cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
 
 --启动！！！

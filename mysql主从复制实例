@@ -5,7 +5,7 @@
 create database ddm;
 
 
-=============================================================================二、配置主从服务器
+=============================================================================二、配置主服务器
 注：
 1.一定要从主服务器
 2.一定要有日志文件
@@ -26,8 +26,8 @@ binlog_do_db=ddm
 进入mysql数据库
 
 创建从数据库的masterbackup用户权限
-
-grant replication slave on *.* to 'root'@'192.168.88.130' identified by 'root';
+192.168.88.130-主服务器ip
+grant replication slave on *.* to 'root'@'192.168.88.150' identified by 'root';
 #备注
 192.168.17.%通配符，表示0-255的ip都可以访问主服务器，正式环境请配置执行的从服务器
 #若将192.168.17.%改为%，则任何ip均可作为其从服务器访问主服务器
@@ -38,7 +38,7 @@ flush PRIVILEGES;
 
 
 
-========================================================================================三、配置主从服务器
+========================================================================================三、配置从服务器
 
 #日志系统的名称（这个名称是可以随便修改的）
 log_bin=master-a-bin
@@ -53,7 +53,7 @@ server-id=2
 #设置主从复制的日志和偏移量
 
 #告诉从服务器我应该从什么地方获取刚刚主服务器生成的日志系统文件
-change  master to master_host='192.168.88.130',master_port=3306,master_user='root',master_password='root',master_log_file='master-a-bin.000001',master_log_pos=154;
+change  master to master_host='192.168.88.150',master_port=3306,master_user='root',master_password='root',master_log_file='master-a-bin.000006',master_log_pos=154;
 
 #启动slave数据同步
 start slave;
@@ -72,8 +72,8 @@ Connecting  正在进行时 Connected 说明已经完成
 开启防火墙
 systemctl start firewalld
 设置3306为开放端口
-firewall-cmd --zone=public --add-port=3306/tcp--permanent
 
+firewall-cmd --zone=public --add-port=3306/tcp --permanent
 重新加载防火墙
 firewall-cmd --reload
 
@@ -81,6 +81,8 @@ firewall-cmd --reload
 3.外部不能登录-修改授权登陆
 
 grant all privileges on *.* to root@'%' identified by 'root' with grant option;
+
+flush PRIVILEGES;
 运行结果错误：ERROR 1819 ( HY000 ) : Unknown error 1819
 
 设置执行查看

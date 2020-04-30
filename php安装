@@ -11,9 +11,9 @@ php -i|grep php.ini
 
 1.编译php（我们不提供apxs参数，相反，我们提供php-fpm相关参数）
 
-./configure --prefix=/usr/local/php7 \
---with-config-file-path=/usr/local/php7/etc \
---with-config-file-scan-dir=/usr/local/php7/etc/php.d \
+./configure --prefix=/usr/local/php73 \
+--with-config-file-path=/usr/local/php73/etc \
+--with-config-file-scan-dir=/usr/local/php73/etc/php.d \
 --with-mcrypt=/usr/include \
 --enable-mysqlnd \
 --with-mysqli \
@@ -47,19 +47,42 @@ php -i|grep php.ini
 --enable-opcache
 
 
+
+错误问题-解决
+checking for libzip... configure: error: system libzip must be upgraded to version >= 0.11
+
+先删除旧版本
+
+yum remove -y libzip
+
+#下载编译安装
+
+wget https://nih.at/libzip/libzip-1.2.0.tar.gz
+
+tar -zxvf libzip-1.2.0.tar.gz
+
+cd libzip-1.2.0
+
+./configure
+
+make && make install
+
+
+
+
 编译安装 
 
 $ make && make install
 
 在之前编译的源码包中，找到 php.ini-production，复制到/usr/local/php/etc下，并改名为php.ini：
 
-$ cp php.ini-production /usr/local/php/etc/php.ini
+$ cp php.ini-production /usr/local/php73/etc/php.ini
  
 
 将php源码编译目录下的 sapi/fpm/init.d.php-fpm 文件拷贝到系统配置 /etc/init.d 目录下并重命名为 php-fpm 
 
-[root@localhost php-7.3.0]# cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm 
-[root@localhost php-7.3.0]# chmod +x /etc/init.d/php-fpm
+[root@localhost php-7.3.0]# cp sapi/fpm/init.d.php-fpm /etc/init.d/php73-fpm 
+[root@localhost php-7.3.0]# chmod +x /etc/init.d/php73-fpm
 
 添加 php-fpm 配置文件 
 将php安装目录下的 /usr/local/php/etc/php-fpm.conf.default 文件拷贝同目录下并重命名为 php-fpm.conf 
@@ -69,7 +92,7 @@ $ cp php.ini-production /usr/local/php/etc/php.ini
 添加 www.conf 配置文件 
 将php安装目录下的 /usr/local/php/etc/php-fpm.d/www.conf.default 文件拷贝同目录下并重命名为 www.conf 
 
-[root@localhost php-7.3.0]# cp /usr/local/php/etc/php-fpm.d/www.conf.default /usr/local/php/etc/php-fpm.d/www.conf 
+[root@localhost php-7.3.0]# cp /usr/local/php/etc/php-fpm.d/www.conf.default /usr/local/php73/etc/php-fpm.d/www.conf 
 
 添加php安装目录到系统环境变量 
 创建并打开文件php.sh 
